@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model comments {
+  id        Int    @id @default(autoincrement())
+  comments  String
+  author_id Int?
+  post_id   Int?
+  users     users? @relation(fields: [author_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comments_author_id_users_id_fk")
+  posts     posts? @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comments_post_id_posts_id_fk")
+}
+
+model groups {
+  id              Int               @id @default(autoincrement())
+  name            String
+  users_to_groups users_to_groups[]
+}
+
+model posts {
+  id        Int        @id @default(autoincrement())
+  title     String
+  content   String
+  author_id Int?
+  comments  comments[]
+  users     users?     @relation(fields: [author_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "posts_author_id_users_id_fk")
+}
+
+model profile_info {
+  id       Int    @id @default(autoincrement())
+  metadata Json?
+  user_id  Int?
+  users    users? @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "profile_info_user_id_users_id_fk")
+}
+
+model users {
+  id              Int               @id @default(autoincrement())
+  name            String
+  email           String            @unique(map: "users_email_unique")
+  password        String
+  comments        comments[]
+  posts           posts[]
+  profile_info    profile_info[]
+  users_to_groups users_to_groups[]
+}
+
+model users_to_groups {
+  user_id  Int
+  group_id Int
+  groups   groups @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_to_groups_group_id_groups_id_fk")
+  users    users  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_to_groups_user_id_users_id_fk")
+
+  @@id([user_id, group_id], map: "users_to_groups_user_id_group_id_pk")
+  @@index([user_id], map: "user_id_index")
+}
