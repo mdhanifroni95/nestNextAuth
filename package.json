@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "@nestjs/mapped-types": "*"
+    "@nestjs/mapped-types": "*",
+    "zod": "^4.1.12"
   },
   "name": "nest-next-auth",
   "private": true,
