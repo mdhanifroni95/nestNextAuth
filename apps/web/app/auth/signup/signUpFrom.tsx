@@ -17,7 +17,7 @@ const SignUpFrom = () => {
         )}
         <div>
           <Label htmlFor="name">Name</Label>
-          <Input id="name" name="name" className="mt-1" placeholder="Rimsha" />
+          <Input id="name" name="name" placeholder="Rimsha" />
         </div>
         {state?.error?.name && (
           <p className="text-sm text-red-500">{state.error.name}</p>
@@ -29,7 +29,6 @@ const SignUpFrom = () => {
             id="email"
             name="email"
             placeholder="rimsha@example.com"
-            className="mt-1"
           ></Input>
         </div>
         {state?.error?.email && (
@@ -38,21 +37,14 @@ const SignUpFrom = () => {
 
         <div>
           <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            className="mt-1"
-          ></Input>
+          <Input id="password" name="password" type="password"></Input>
         </div>
         {state?.error?.password && (
-          <div>
+          <div className="text-sm text-red-500">
             <p>Password must:</p>
             <ul>
               {state.error.password.map((err) => (
-                <li key={err} className="text-sm text-red-500">
-                  {err}
-                </li>
+                <li key={err}>{err}</li>
               ))}
             </ul>
           </div>

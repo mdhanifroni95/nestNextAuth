@@ -20,13 +20,14 @@ export async function signUp(
     } as FormState;
   }
 
-  const response = await fetch(`${BACKEND_URL}/auth/sing-up`, {
+  const response = await fetch(`${BACKEND_URL}/auth/sign-up`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(validationFields.data),
   });
+  console.log("response", response);
 
   if (response.ok) {
     redirect("/auth/sing-in");
