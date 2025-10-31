@@ -4,7 +4,7 @@ import SignUpFrom from "./signUpFrom";
 
 const SignUpPage = () => {
   return (
-    <div className="bg-white p-8 rounded-lg shadow-lg w-96 flex flex-col justify-center items-center">
+    <div className="bg-white p-8 rounded-lg shadow-lg w-100 h-75 flex flex-col justify-center items-center">
       <h1 className="text-center text-2xl font-bold mb-24 mt-5">
         Sing Up Page
       </h1>
