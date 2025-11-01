@@ -11,7 +11,7 @@ const SignUpPage = () => {
       <SignUpFrom />
       <div className="flex justify-between text-sm">
         <p>Already have an account?</p>
-        <Link className="underline" href={"/auth/singin"}>
+        <Link className="underline" href={"/auth/signin"}>
           Sing in
         </Link>
       </div>
