@@ -49,7 +49,7 @@ export async function signIn(
     email: formData.get("email"),
     password: formData.get("password"),
   });
-  console.log("validationFields", validationFields);
+  // console.log("validationFields", validationFields);
 
   if (!validationFields.success) {
     return {
@@ -68,7 +68,6 @@ export async function signIn(
 
   if (response.ok) {
     const result = await response.json();
-
     //TODO: create The session for Authenticated User
     console.log("result", { result });
   }

@@ -7,7 +7,7 @@ import { Injectable } from '@nestjs/common';
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly authService: AuthService) {
     super({
-      email: 'email',
+      usernameField: 'email',
     });
   }
 
