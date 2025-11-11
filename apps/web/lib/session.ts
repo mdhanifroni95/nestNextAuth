@@ -8,13 +8,13 @@ export type Session = {
     id: string;
     name: string;
   };
-  // accessToken: string;
+  accessToken: string;
   // refreshToken: string;
 };
 
 const encodedKey = new TextEncoder().encode(secretKey);
 export async function createSession(payload: Session) {
-  const expiredAt = new Date(Date.now() * 7 * 24 * 60 * 60 * 1000);
+  const expiredAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
   const session = await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
@@ -44,4 +44,8 @@ export async function getSession() {
     console.error("Error verifying JWT:", err);
     redirect("/auth/signin");
   }
+}
+
+export async function deleteSession() {
+  (await cookies()).delete("session");
 }

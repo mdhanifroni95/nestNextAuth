@@ -16,6 +16,6 @@ export class AuthController {
   @Post('sign-in')
   login(@Request() req) {
     console.log('sign in user:');
-    return req.user;
+    return this.authService.login(req.user.id, req.user.name);
   }
 }
