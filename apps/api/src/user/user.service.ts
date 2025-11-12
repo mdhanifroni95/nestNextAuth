@@ -33,4 +33,16 @@ export class UserService {
       console.log(error);
     }
   }
+
+  async findOne(userId: number) {
+    try {
+      return await this.prisma.users.findUnique({
+        where: {
+          id: userId,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
