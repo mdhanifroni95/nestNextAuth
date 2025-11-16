@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { BACKEND_URL } from "./constants";
 import { FormState, LoginFormSchema, SignUpFormSchema } from "./type";
-import { createSession, updateToken } from "./session";
+import { createSession } from "./session";
 
 export async function signUp(
   state: FormState,

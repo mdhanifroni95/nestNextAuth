@@ -2,6 +2,7 @@
   "dependencies": {
     "@nestjs/mapped-types": "*",
     "jose": "^6.1.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "zod": "^4.1.12"
   },
@@ -15,6 +16,7 @@
     "check-types": "turbo run check-types"
   },
   "devDependencies": {
+    "@types/passport-google-oauth20": "^2.0.17",
     "@types/passport-jwt": "^4.0.1",
     "prettier": "^3.6.2",
     "turbo": "^2.6.1",
