@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
-import { verify } from 'argon2';
+import { hash, verify } from 'argon2';
 import { AuthJwtPayload } from './types/auth-jwtPayload';
 import { JwtService } from '@nestjs/jwt';
 import refreshJwtConfig from './config/refresh-jwt.config';
@@ -41,6 +41,10 @@ export class AuthService {
 
   async login(userId: number, name?: string) {
     const { accessToken, refreshToken } = await this.generateTokens(userId);
+
+    //add for Invalidate (Revoking) The Tokens
+    const hashedRT = await hash(refreshToken);
+    await this.userService.updateHashedRefreshToken(userId, hashedRT);
     return {
       id: userId,
       name: name,

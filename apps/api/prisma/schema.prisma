@@ -40,14 +40,15 @@ model profile_info {
 }
 
 model users {
-  id              Int               @id @default(autoincrement())
-  name            String
-  email           String            @unique(map: "users_email_unique")
-  password        String
-  comments        comments[]
-  posts           posts[]
-  profile_info    profile_info[]
-  users_to_groups users_to_groups[]
+  id                 Int               @id @default(autoincrement())
+  name               String
+  email              String            @unique(map: "users_email_unique")
+  password           String
+  hashedRefreshToken String?
+  comments           comments[]
+  posts              posts[]
+  profile_info       profile_info[]
+  users_to_groups    users_to_groups[]
 }
 
 model users_to_groups {
