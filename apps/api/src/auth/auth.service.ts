@@ -45,6 +45,7 @@ export class AuthService {
     //add for Invalidate (Revoking) The Tokens
     const hashedRT = await hash(refreshToken);
     await this.userService.updateHashedRefreshToken(userId, hashedRT);
+
     return {
       id: userId,
       name: name,
@@ -70,9 +71,18 @@ export class AuthService {
     };
   }
 
-  async validateRefreshToken(userId: number) {
+  async validateRefreshToken(userId: number, refreshToken: string) {
     const user = await this.userService.findOne(userId);
     if (!user) throw new UnauthorizedException('User not found!');
+
+    //add this for invalidate (Revoking) The Tokens
+    const hashedRefreshToken = user.hashedRefreshToken;
+    if (!hashedRefreshToken)
+      throw new UnauthorizedException('Can not get token');
+    const refreshTokenMatched = await verify(hashedRefreshToken, refreshToken);
+    if (!refreshTokenMatched)
+      throw new UnauthorizedException('Invalid Refresh Token!');
+    //add this for invalidate (Revoking) The Tokens
     return {
       id: user.id,
     };
@@ -80,6 +90,11 @@ export class AuthService {
 
   async refreshToken(userId: number, name: string) {
     const { accessToken, refreshToken } = await this.generateTokens(userId);
+
+    //add for Invalidate (Revoking) The Tokens
+    const hashedRT = await hash(refreshToken);
+    await this.userService.updateHashedRefreshToken(userId, hashedRT);
+
     return {
       id: userId,
       name,
@@ -92,5 +107,9 @@ export class AuthService {
     const user = await this.userService.findByEmail(googleUser.email);
     if (user) return user;
     return await this.userService.create(googleUser);
+  }
+
+  async signOut(userId: number) {
+    return await this.userService.updateHashedRefreshToken(userId, null);
   }
 }
