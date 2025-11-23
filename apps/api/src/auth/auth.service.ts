@@ -36,7 +36,8 @@ export class AuthService {
     if (!isPasswordMatched)
       throw new UnauthorizedException('Invalid Credentials!');
 
-    return { id: user.id, name: user.name };
+    //return role
+    return { id: user.id, name: user.name, role: user.role };
   }
 
   async login(userId: number, name?: string) {
@@ -68,6 +69,7 @@ export class AuthService {
     if (!user) throw new UnauthorizedException('User not found!');
     return {
       id: user.id,
+      role: user.role,
     };
   }
 

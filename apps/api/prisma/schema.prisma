@@ -40,15 +40,18 @@ model profile_info {
 }
 
 model users {
-  id                 Int               @id @default(autoincrement())
+  id                 Int     @id @default(autoincrement())
   name               String
-  email              String            @unique(map: "users_email_unique")
+  email              String  @unique(map: "users_email_unique")
   password           String
   hashedRefreshToken String?
-  comments           comments[]
-  posts              posts[]
-  profile_info       profile_info[]
-  users_to_groups    users_to_groups[]
+
+  //add role field
+  role            Role              @default(USER)
+  comments        comments[]
+  posts           posts[]
+  profile_info    profile_info[]
+  users_to_groups users_to_groups[]
 }
 
 model users_to_groups {
@@ -59,4 +62,10 @@ model users_to_groups {
 
   @@id([user_id, group_id], map: "users_to_groups_user_id_group_id_pk")
   @@index([user_id], map: "user_id_index")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  USER
 }
