@@ -11,6 +11,7 @@ import { AuthJwtPayload } from './types/auth-jwtPayload';
 import { JwtService } from '@nestjs/jwt';
 import refreshJwtConfig from './config/refresh-jwt.config';
 import type { ConfigType } from '@nestjs/config';
+import { Role } from 'generated/prisma';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +41,7 @@ export class AuthService {
     return { id: user.id, name: user.name, role: user.role };
   }
 
-  async login(userId: number, name?: string) {
+  async login(userId: number, name?: string, role?: Role) {
     const { accessToken, refreshToken } = await this.generateTokens(userId);
 
     //add for Invalidate (Revoking) The Tokens
@@ -50,6 +51,7 @@ export class AuthService {
     return {
       id: userId,
       name: name,
+      role,
       accessToken,
       refreshToken,
     };

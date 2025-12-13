@@ -17,6 +17,7 @@ export const authFetch = async (
   };
 
   let response = await fetch(url, options);
+  console.log("authFetch response", response);
   if (response.status === 401) {
     if (!session?.refreshToken) throw new Error("refresh token not found");
 

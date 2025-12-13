@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  const response = await authFetch(`${BACKEND_URL}/auth/signout`, {
+  const response = await authFetch(`${BACKEND_URL}/auth/sign-out`, {
     method: "POST",
   });
 

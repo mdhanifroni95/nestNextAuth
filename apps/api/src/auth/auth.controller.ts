@@ -18,6 +18,7 @@ import type { Response } from 'express';
 import { Public } from './decorators/public.decorator';
 import { Roles } from './decorators/role.decorator';
 import { RolesGuard } from './guards/roles/roles.guard';
+import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -34,11 +35,11 @@ export class AuthController {
   @Post('sign-in')
   login(@Request() req) {
     console.log('sign in user:');
-    return this.authService.login(req.user.id, req.user.name);
+    return this.authService.login(req.user.id, req.user.name, req.user.role);
   }
 
-  @UseGuards(RolesGuard)
-  @Roles('ADMIN', 'EDITOR')
+  // @Roles('ADMIN', 'EDITOR')
+  // @UseGuards(RolesGuard)
   @Get('protected')
   getAll(@Request() req) {
     return {
@@ -62,15 +63,19 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
   async googleCallback(@Request() req, @Res() res: Response) {
-    const response = await this.authService.login(req.user.id, req.user.name);
+    const response = await this.authService.login(
+      req.user.id,
+      req.user.name,
+      req.user.role,
+    );
 
     res.redirect(
-      `http://localhost:3000/api/auth/google/callback?userId=${response.id}&name=${response.name}&accessToken=${response.accessToken}&refreshToken=${response.refreshToken}`,
+      `http://localhost:3000/api/auth/google/callback?userId=${response.id}&name=${response.name}&accessToken=${response.accessToken}&refreshToken=${response.refreshToken}&role=${response.role}`,
     );
   }
 
   // @UseGuards(JwtAuthGuard)
-  @Post('signout')
+  @Post('sign-out')
   signOut(@Req() req) {
     return this.authService.signOut(req.user.id);
   }

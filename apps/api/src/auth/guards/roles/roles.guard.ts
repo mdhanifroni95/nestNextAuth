@@ -7,7 +7,7 @@ import { ROLES_KEY } from 'src/auth/decorators/role.decorator';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(private readonly reflector: Reflector) {}
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -26,7 +26,7 @@ export class RolesGuard implements CanActivate {
     if (!user) return false;
 
     // safe to access user.role now
-    const hasRequiredRole = requiredRoles.some((role) => user.role === role);
+    const hasRequiredRole = requiredRoles.includes(user.role as Role);
     return hasRequiredRole;
   }
 }
