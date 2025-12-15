@@ -11,22 +11,30 @@ export const authFetch = async (
 ) => {
   const session = await getSession();
 
-  options.headers = {
-    ...options.headers,
-    Authorization: `Bearer ${session?.accessToken}`,
+  const headers: Record<string, string> = {
+    ...(options.headers || {}),
   };
 
-  let response = await fetch(url, options);
-  console.log("authFetch response", response);
-  if (response.status === 401) {
-    if (!session?.refreshToken) throw new Error("refresh token not found");
+  if (session?.accessToken) {
+    headers["Authorization"] = `Bearer ${session.accessToken}`;
+  }
 
-    const newAccessToken = await refreshToken(session.refreshToken);
+  let response = await fetch(url.toString(), { ...options, headers });
 
-    if (newAccessToken) {
-      options.headers.Authorization = `Bearer ${newAccessToken}`;
-      response = await fetch(url, options);
+  if (response.status === 401 && !session?.refreshToken) {
+    const newAccessToken = await refreshToken(session?.refreshToken || "");
+    console.log("Refreshed access token", newAccessToken);
+
+    if (!newAccessToken) {
+      throw new Error("Unable to refresh token");
     }
+    response = await fetch(url.toString(), {
+      ...options,
+      headers: {
+        ...headers,
+        Authorization: `Bearer ${newAccessToken}`,
+      },
+    });
   }
   return response;
 };

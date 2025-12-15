@@ -1,18 +1,18 @@
-import { authFetch } from "@/lib/authFetch";
 import { BACKEND_URL } from "@/lib/constants";
 import { deleteSession } from "@/lib/session";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  const response = await authFetch(`${BACKEND_URL}/auth/sign-out`, {
-    method: "POST",
-  });
-
-  if (response.ok) {
-    await deleteSession();
+  try {
+    await fetch(`${BACKEND_URL}/auth/sign-out`, {
+      method: "POST",
+    });
+  } catch (e) {
+    console.error("Signout API failed", e);
   }
 
+  await deleteSession();
   revalidatePath("/", "layout");
   revalidatePath("/", "page");
   return NextResponse.redirect(new URL("/", req.nextUrl));

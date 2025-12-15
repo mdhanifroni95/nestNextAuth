@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { BACKEND_URL } from "./constants";
+import { BACKEND_URL, FRONTEND_URL } from "./constants";
 import { FormState, LoginFormSchema, SignUpFormSchema } from "./type";
 import { createSession } from "./session";
 
@@ -94,32 +94,39 @@ export const refreshToken = async (oldRefreshToken: string) => {
     const response = await fetch(`${BACKEND_URL}/auth/refresh`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        // "Content-Type": "application/json",
+        Authorization: `Bearer ${oldRefreshToken}`,
       },
-      body: JSON.stringify({
-        refresh: oldRefreshToken,
-      }),
+      // body: JSON.stringify({
+      //   refresh: oldRefreshToken,
+      // }),
     });
 
     if (!response.ok) {
-      throw new Error("Failed to refresh token" + response.statusText);
+      throw new Error("Refresh token invalid or expired" + response.statusText);
+      return null;
     }
 
-    const { accessToken, refreshToken } = await response.json();
+    const { accessToken, refreshToken: newRefreshToken } =
+      await response.json();
 
     // Update the session with the new tokens
-    const updateRes = await fetch("http://localhost:3000/api/auth/update", {
+    const updateRes = await fetch(`${FRONTEND_URL}/api/auth/update`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        // "Content-Type": "application/json",
+        Authorization: `Bearer ${newRefreshToken}`,
       },
-      body: JSON.stringify({
-        accessToken,
-        refreshToken,
-      }),
+      // body: JSON.stringify({
+      //   accessToken,
+      //   refreshToken: newRefreshToken,
+      // }),
     });
 
-    if (!updateRes.ok) throw new Error("Failed to update the tokens");
+    if (!updateRes.ok) {
+      throw new Error("Failed to update the tokens");
+    }
+
     return accessToken;
   } catch (e) {
     console.log("Error refreshing token", e);

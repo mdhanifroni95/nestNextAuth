@@ -38,7 +38,7 @@ export class AuthController {
     return this.authService.login(req.user.id, req.user.name, req.user.role);
   }
 
-  // @Roles('ADMIN', 'EDITOR')
+  @Roles('ADMIN', 'EDITOR')
   // @UseGuards(RolesGuard)
   @Get('protected')
   getAll(@Request() req) {
