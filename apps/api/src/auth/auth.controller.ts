@@ -39,7 +39,6 @@ export class AuthController {
   }
 
   @Roles('ADMIN', 'EDITOR')
-  // @UseGuards(RolesGuard)
   @Get('protected')
   getAll(@Request() req) {
     return {

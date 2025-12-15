@@ -5,7 +5,8 @@ import React from "react";
 const Dashboard = async () => {
   const session = await getSession();
   if (!session || !session.user) redirect("/auth/signin");
-  console.log("session", session);
+  if (session.user.role !== "ADMIN") redirect("/auth/signin");
+  // console.log("session", session);
   return <div>Dashboard</div>;
 };
 
